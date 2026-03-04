@@ -11,6 +11,7 @@ interface AppContextType {
   setDecoySkin: (skin: DecoySkin) => void;
   hasCompletedOnboarding: boolean;
   completeOnboarding: () => void;
+  resetApp: () => void;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -38,8 +39,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setHasCompletedOnboarding(true);
   }, []);
 
+  const resetApp = useCallback(() => {
+    // Clear all safestep keys
+    Object.keys(localStorage).filter(k => k.startsWith('safestep_')).forEach(k => localStorage.removeItem(k));
+    setHasCompletedOnboarding(false);
+    setDecoySkinState('recipe');
+    setMode('decoy');
+  }, []);
+
   return (
-    <AppContext.Provider value={{ mode, toggleMode, exitToDecoy, decoySkin, setDecoySkin, hasCompletedOnboarding, completeOnboarding }}>
+    <AppContext.Provider value={{ mode, toggleMode, exitToDecoy, decoySkin, setDecoySkin, hasCompletedOnboarding, completeOnboarding, resetApp }}>
       {children}
     </AppContext.Provider>
   );
