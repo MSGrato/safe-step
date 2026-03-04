@@ -1,0 +1,7 @@
+project_id = "kdkygjcmvbtcwfheyuyj"
+
+[functions.safety-plan]
+verify_jwt = false
+
+[functions.chat]
+verify_jwt = false
