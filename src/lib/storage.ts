@@ -3,6 +3,7 @@ const KEYS = {
   decoySkin: 'safestep_decoy_skin',
   intakeAnswers: 'safestep_intake_answers',
   safetyChecklist: 'safestep_safety_checklist',
+  checklistProgress: 'safestep_checklist_progress',
   chatHistory: 'safestep_chat_history',
   flaggedMessages: 'safestep_flagged_messages',
   zipCode: 'safestep_zip_code',
@@ -54,6 +55,13 @@ export const storage = {
     flagged.push({ messageId, timestamp: Date.now() });
     localStorage.setItem(KEYS.flaggedMessages, JSON.stringify(flagged));
   },
+
+  getChecklistProgress: (): Record<number, boolean> => {
+    const data = localStorage.getItem(KEYS.checklistProgress);
+    return data ? JSON.parse(data) : {};
+  },
+  setChecklistProgress: (progress: Record<number, boolean>) =>
+    localStorage.setItem(KEYS.checklistProgress, JSON.stringify(progress)),
 
   getZipCode: (): string => localStorage.getItem(KEYS.zipCode) || '',
   setZipCode: (zip: string) => localStorage.setItem(KEYS.zipCode, zip),

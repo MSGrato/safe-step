@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { storage, type IntakeAnswers } from '@/lib/storage';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { Checkbox } from '@/components/ui/checkbox';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
 
@@ -37,8 +38,17 @@ export function PlanTab() {
   const [answers, setAnswers] = useState<Partial<IntakeAnswers>>({});
   const [step, setStep] = useState(0);
   const [checklist, setChecklist] = useState<string | null>(storage.getSafetyChecklist());
+  const [checked, setChecked] = useState<Record<number, boolean>>(storage.getChecklistProgress());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const toggleItem = useCallback((index: number) => {
+    setChecked(prev => {
+      const updated = { ...prev, [index]: !prev[index] };
+      storage.setChecklistProgress(updated);
+      return updated;
+    });
+  }, []);
 
   const existingAnswers = storage.getIntakeAnswers();
   const showIntake = !existingAnswers && !checklist;
@@ -84,9 +94,11 @@ export function PlanTab() {
 
   const handleRetake = () => {
     storage.clearIntakeAnswers();
+    storage.setChecklistProgress({});
     setAnswers({});
     setStep(0);
     setChecklist(null);
+    setChecked({});
   };
 
   if (loading) {
@@ -110,12 +122,28 @@ export function PlanTab() {
   }
 
   if (checklist) {
+    const items = checklist.split('\n').filter(Boolean);
+    const completedCount = items.filter((_, i) => checked[i]).length;
+
     return (
       <div className="px-5 pt-6 pb-24">
-        <h2 className="text-xl font-semibold text-foreground mb-6">Your Safety Plan</h2>
-        <div className="bg-card rounded-2xl p-5 shadow-sm border border-border space-y-4">
-          {checklist.split('\n').filter(Boolean).map((item, i) => (
-            <p key={i} className="text-foreground leading-relaxed text-[15px]">{item}</p>
+        <h2 className="text-xl font-semibold text-foreground mb-2">Your Safety Plan</h2>
+        <p className="text-sm text-muted-foreground mb-6">{completedCount} of {items.length} completed</p>
+        <div className="bg-card rounded-2xl p-5 shadow-sm border border-border space-y-1">
+          {items.map((item, i) => (
+            <label
+              key={i}
+              className="flex items-start gap-3 p-3 rounded-xl cursor-pointer hover:bg-muted/50 transition-colors"
+            >
+              <Checkbox
+                checked={!!checked[i]}
+                onCheckedChange={() => toggleItem(i)}
+                className="mt-0.5"
+              />
+              <span className={`text-[15px] leading-relaxed ${checked[i] ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
+                {item}
+              </span>
+            </label>
           ))}
         </div>
         <p className="text-xs text-muted-foreground mt-4 px-1 leading-relaxed">
