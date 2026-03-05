@@ -46,7 +46,7 @@ export function Onboarding() {
             {PRIVACY_POLICY_SECTIONS.map((section, i) =>
             <div key={i}>
                 {section.isWarning ?
-              <div className="flex items-start gap-3 p-4 rounded-lg bg-destructive/10 border border-destructive/20">
+              <div className="flex items-start gap-3 p-4 rounded-lg bg-destructive/10 border border-[#f50000]">
                     <AlertTriangle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
                     <div>
                       <p className="font-semibold text-sm mb-1 text-[#ed0202]">{section.title}</p>
