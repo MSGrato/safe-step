@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Delete } from 'lucide-react';
 
-export function CalculatorApp() {
+export function CalculatorApp({ onTripleTap }: { onTripleTap?: () => void }) {
   const [display, setDisplay] = useState('0');
   const [prev, setPrev] = useState<string | null>(null);
   const [op, setOp] = useState<string | null>(null);
@@ -103,6 +103,7 @@ export function CalculatorApp() {
                 <button
                   key={btn}
                   onClick={(e) => { e.stopPropagation(); handlePress(btn); }}
+                  onPointerDown={btn === 'C' ? onTripleTap : undefined}
                   className={`
                     w-[72px] h-[72px] rounded-full text-2xl font-medium flex items-center justify-center
                     transition-colors select-none

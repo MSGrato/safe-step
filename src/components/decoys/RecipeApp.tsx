@@ -62,7 +62,7 @@ function saveRecipes(recipes: Recipe[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(recipes));
 }
 
-export function RecipeApp() {
+export function RecipeApp({ onTripleTap }: { onTripleTap?: () => void }) {
   const [recipes, setRecipes] = useState<Recipe[]>(loadRecipes);
   const [view, setView] = useState<'list' | 'detail' | 'edit'>('list');
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -278,7 +278,7 @@ export function RecipeApp() {
     <div className="min-h-screen bg-decoy-bg">
       <div className="bg-decoy-card px-5 pt-12 pb-4 shadow-sm">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold text-decoy-text">My Recipes</h1>
+          <h1 className="text-2xl font-bold text-decoy-text" onPointerDown={onTripleTap}>My Recipes</h1>
           <button onClick={openNew} className="w-9 h-9 rounded-full bg-decoy-accent text-white flex items-center justify-center shadow">
             <Plus className="w-5 h-5" />
           </button>

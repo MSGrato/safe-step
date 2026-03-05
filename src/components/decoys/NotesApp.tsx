@@ -46,7 +46,7 @@ function timeAgo(ts: number): string {
   return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-export function NotesApp() {
+export function NotesApp({ onTripleTap }: { onTripleTap?: () => void }) {
   const [notes, setNotes] = useState<Note[]>(loadNotes);
   const [view, setView] = useState<'list' | 'edit'>('list');
   const [editId, setEditId] = useState<string | null>(null);
@@ -142,7 +142,7 @@ export function NotesApp() {
   return (
     <div className="min-h-screen bg-neutral-50">
       <div className="px-5 pt-12 pb-4">
-        <h1 className="text-3xl font-bold text-neutral-900 mb-1">Notes</h1>
+        <h1 className="text-3xl font-bold text-neutral-900 mb-1" onPointerDown={onTripleTap}>Notes</h1>
         <p className="text-sm text-neutral-500">{notes.length} note{notes.length !== 1 ? 's' : ''}</p>
       </div>
 
