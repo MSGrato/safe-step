@@ -15,12 +15,28 @@ const skins: { id: DecoySkin; label: string; icon: React.ReactNode; desc: string
 
 export function Onboarding() {
   const { setDecoySkin, completeOnboarding, hasAcceptedPrivacy, acceptPrivacy } = useApp();
-  const [step, setStep] = useState(hasAcceptedPrivacy ? 1 : 0);
+  const [step, setStep] = useState(hasAcceptedPrivacy ? 2 : 0);
   const [selectedSkin, setSelectedSkin] = useState<DecoySkin>('recipe');
   const [privacyChecked, setPrivacyChecked] = useState(false);
 
-  // Step 0: Privacy Policy
+  // Step 0: Welcome — "You are safe here"
   if (step === 0) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-8 text-center">
+        <Shield className="w-16 h-16 text-primary mb-8" />
+        <h1 className="text-2xl font-semibold text-foreground mb-4">You are safe here.</h1>
+        <p className="text-muted-foreground leading-relaxed mb-12">
+          This app is private and stores nothing outside your device.
+        </p>
+        <Button onClick={() => setStep(1)} className="w-full max-w-xs h-12 text-base">
+          Continue
+        </Button>
+      </div>
+    );
+  }
+
+  // Step 1: Privacy Policy
+  if (step === 1) {
     return (
       <div className="min-h-screen bg-background flex flex-col px-6 pt-12 pb-8">
         <h1 className="text-2xl font-semibold text-foreground mb-1">Privacy Policy & Disclosures</h1>
@@ -58,26 +74,10 @@ export function Onboarding() {
           </span>
         </label>
         <Button
-          onClick={() => { acceptPrivacy(); setStep(1); }}
+          onClick={() => { acceptPrivacy(); setStep(2); }}
           disabled={!privacyChecked}
           className="w-full h-12 text-base"
         >
-          Continue
-        </Button>
-      </div>
-    );
-  }
-
-  // Step 1: Welcome
-  if (step === 1) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-8 text-center">
-        <Shield className="w-16 h-16 text-primary mb-8" />
-        <h1 className="text-2xl font-semibold text-foreground mb-4">You are safe here.</h1>
-        <p className="text-muted-foreground leading-relaxed mb-12">
-          This app is private and stores nothing outside your device.
-        </p>
-        <Button onClick={() => setStep(2)} className="w-full max-w-xs h-12 text-base">
           Continue
         </Button>
       </div>
