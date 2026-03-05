@@ -40,7 +40,7 @@ export function SafetyCheckScreen({ onSafe, onExit }: SafetyCheckScreenProps) {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-8 text-center">
       <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-8">
-        <Shield className="w-8 h-8 text-primary" />
+        <Shield className="w-8 h-8 text-destructive" />
       </div>
       <h1 className="text-xl font-semibold text-foreground mb-2">Are you safe?</h1>
       <p className="text-muted-foreground mb-10">
