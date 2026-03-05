@@ -5,25 +5,31 @@ import { NotesApp } from '@/components/decoys/NotesApp';
 import { CalculatorApp } from '@/components/decoys/CalculatorApp';
 import { Onboarding } from '@/components/onboarding/Onboarding';
 import { RealInterface } from '@/components/real/RealInterface';
+import { SafetyCheckScreen } from '@/components/real/SafetyCheckScreen';
 
 const Index = () => {
-  const { mode, toggleMode, hasCompletedOnboarding, decoySkin } = useApp();
+  const { mode, toggleMode, hasCompletedOnboarding, decoySkin, pendingRealMode, enterRealMode, exitToDecoy } = useApp();
   const handleTripleTap = useTripleTap(toggleMode, 500);
 
   if (!hasCompletedOnboarding) {
     return <Onboarding />;
   }
 
-  if (mode === 'decoy') {
-    const DecoyComponent = decoySkin === 'notes' ? NotesApp : decoySkin === 'calculator' ? CalculatorApp : RecipeApp;
-    return (
-      <div className="no-select">
-        <DecoyComponent onTripleTap={handleTripleTap} />
-      </div>
-    );
+  // Safety check gate before entering real mode
+  if (pendingRealMode) {
+    return <SafetyCheckScreen onSafe={enterRealMode} onExit={exitToDecoy} />;
   }
 
-  return <RealInterface />;
+  if (mode === 'real') {
+    return <RealInterface />;
+  }
+
+  const DecoyComponent = decoySkin === 'notes' ? NotesApp : decoySkin === 'calculator' ? CalculatorApp : RecipeApp;
+  return (
+    <div className="no-select">
+      <DecoyComponent onTripleTap={handleTripleTap} />
+    </div>
+  );
 };
 
 export default Index;
