@@ -10,7 +10,7 @@ const KEYS = {
   zipCode: 'safestep_zip_code',
 };
 
-export type DecoySkin = 'recipe' | 'notes' | 'calculator';
+export type DecoySkin = 'recipe' | 'notes' | 'weather';
 
 export type IntakeAnswers = {
   children: string;

@@ -56,7 +56,14 @@ export default {
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
-  			}
+			},
+			decoy: {
+				bg: 'hsl(var(--decoy-bg))',
+				card: 'hsl(var(--decoy-card))',
+				accent: 'hsl(var(--decoy-accent))',
+				text: 'hsl(var(--decoy-text))',
+				muted: 'hsl(var(--decoy-muted))',
+			},
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

@@ -2,7 +2,7 @@ import { useApp } from '@/contexts/AppContext';
 import { useTripleTap } from '@/hooks/useTripleTap';
 import { RecipeApp } from '@/components/decoys/RecipeApp';
 import { NotesApp } from '@/components/decoys/NotesApp';
-import { CalculatorApp } from '@/components/decoys/CalculatorApp';
+import { WeatherApp } from '@/components/decoys/WeatherApp';
 import { Onboarding } from '@/components/onboarding/Onboarding';
 import { RealInterface } from '@/components/real/RealInterface';
 import { SafetyCheckScreen } from '@/components/real/SafetyCheckScreen';
@@ -24,7 +24,7 @@ const Index = () => {
     return <RealInterface />;
   }
 
-  const DecoyComponent = decoySkin === 'notes' ? NotesApp : decoySkin === 'calculator' ? CalculatorApp : RecipeApp;
+  const DecoyComponent = decoySkin === 'notes' ? NotesApp : decoySkin === 'weather' ? WeatherApp : RecipeApp;
   return (
     <div className="no-select">
       <DecoyComponent onTripleTap={handleTripleTap} />
