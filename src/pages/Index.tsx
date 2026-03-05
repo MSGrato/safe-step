@@ -10,6 +10,10 @@ const Index = () => {
   const { mode, toggleMode, hasCompletedOnboarding, decoySkin } = useApp();
   const handleTripleTap = useTripleTap(toggleMode, 500);
 
+  if (!hasCompletedOnboarding) {
+    return <Onboarding />;
+  }
+
   if (mode === 'decoy') {
     const DecoyComponent = decoySkin === 'notes' ? NotesApp : decoySkin === 'calculator' ? CalculatorApp : RecipeApp;
     return (
@@ -17,11 +21,6 @@ const Index = () => {
         <DecoyComponent onTripleTap={handleTripleTap} />
       </div>
     );
-  }
-
-  // Real mode
-  if (!hasCompletedOnboarding) {
-    return <Onboarding />;
   }
 
   return <RealInterface />;
