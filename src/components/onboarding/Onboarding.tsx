@@ -7,11 +7,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Shield, BookOpen, Calculator, StickyNote, AlertTriangle } from 'lucide-react';
 
-const skins: { id: DecoySkin; label: string; icon: React.ReactNode; desc: string }[] = [
-  { id: 'recipe', label: 'Recipe App', icon: <BookOpen className="w-8 h-8" />, desc: 'A food recipe collection' },
-  { id: 'notes', label: 'Notes App', icon: <StickyNote className="w-8 h-8" />, desc: 'A simple notepad' },
-  { id: 'calculator', label: 'Calculator', icon: <Calculator className="w-8 h-8" />, desc: 'A standard calculator' },
-];
+const skins: {id: DecoySkin;label: string;icon: React.ReactNode;desc: string;}[] = [
+{ id: 'recipe', label: 'Recipe App', icon: <BookOpen className="w-8 h-8" />, desc: 'A food recipe collection' },
+{ id: 'notes', label: 'Notes App', icon: <StickyNote className="w-8 h-8" />, desc: 'A simple notepad' },
+{ id: 'calculator', label: 'Calculator', icon: <Calculator className="w-8 h-8" />, desc: 'A standard calculator' }];
+
 
 export function Onboarding() {
   const { setDecoySkin, completeOnboarding, hasAcceptedPrivacy, acceptPrivacy } = useApp();
@@ -31,8 +31,8 @@ export function Onboarding() {
         <Button onClick={() => setStep(1)} className="w-full max-w-xs h-12 text-base">
           Continue
         </Button>
-      </div>
-    );
+      </div>);
+
   }
 
   // Step 1: Privacy Policy
@@ -43,45 +43,45 @@ export function Onboarding() {
         <p className="text-sm text-muted-foreground mb-4">Please read before continuing.</p>
         <ScrollArea className="flex-1 border border-border rounded-xl mb-6">
           <div className="p-5 space-y-6">
-            {PRIVACY_POLICY_SECTIONS.map((section, i) => (
-              <div key={i}>
-                {section.isWarning ? (
-                  <div className="flex items-start gap-3 p-4 rounded-lg bg-destructive/10 border border-destructive/20">
+            {PRIVACY_POLICY_SECTIONS.map((section, i) =>
+            <div key={i}>
+                {section.isWarning ?
+              <div className="flex items-start gap-3 p-4 rounded-lg bg-destructive/10 border border-destructive/20">
                     <AlertTriangle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
                     <div>
-                      <p className="font-semibold text-destructive text-sm mb-1">{section.title}</p>
+                      <p className="font-semibold text-sm mb-1 text-[#ed0202]">{section.title}</p>
                       <p className="text-sm text-foreground/80 leading-relaxed">{section.content}</p>
                     </div>
-                  </div>
-                ) : (
-                  <>
+                  </div> :
+
+              <>
                     <h2 className="text-base font-semibold text-foreground mb-2">{section.title}</h2>
                     <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">{section.content}</p>
                   </>
-                )}
+              }
               </div>
-            ))}
+            )}
           </div>
         </ScrollArea>
         <label className="flex items-start gap-3 mb-6 cursor-pointer">
           <Checkbox
             checked={privacyChecked}
             onCheckedChange={(checked) => setPrivacyChecked(checked === true)}
-            className="mt-0.5"
-          />
+            className="mt-0.5" />
+          
           <span className="text-sm text-foreground leading-snug">
             I have read and accept the Privacy Policy
           </span>
         </label>
         <Button
-          onClick={() => { acceptPrivacy(); setStep(2); }}
+          onClick={() => {acceptPrivacy();setStep(2);}}
           disabled={!privacyChecked}
-          className="w-full h-12 text-base"
-        >
+          className="w-full h-12 text-base">
+          
           Continue
         </Button>
-      </div>
-    );
+      </div>);
+
   }
 
   // Step 2: Decoy skin selection
@@ -91,16 +91,16 @@ export function Onboarding() {
         <h1 className="text-2xl font-semibold text-foreground mb-2">Choose your disguise</h1>
         <p className="text-muted-foreground mb-8">This is what others will see when they look at your phone.</p>
         <div className="space-y-3 flex-1">
-          {skins.map(skin => (
-            <button
-              key={skin.id}
-              onClick={() => setSelectedSkin(skin.id)}
-              className={`w-full flex items-center gap-4 p-5 rounded-2xl border-2 transition-all ${
-                selectedSkin === skin.id
-                  ? 'border-primary bg-primary/5'
-                  : 'border-border bg-card'
-              }`}
-            >
+          {skins.map((skin) =>
+          <button
+            key={skin.id}
+            onClick={() => setSelectedSkin(skin.id)}
+            className={`w-full flex items-center gap-4 p-5 rounded-2xl border-2 transition-all ${
+            selectedSkin === skin.id ?
+            'border-primary bg-primary/5' :
+            'border-border bg-card'}`
+            }>
+            
               <div className={`p-3 rounded-xl ${selectedSkin === skin.id ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}>
                 {skin.icon}
               </div>
@@ -109,16 +109,16 @@ export function Onboarding() {
                 <p className="text-sm text-muted-foreground">{skin.desc}</p>
               </div>
             </button>
-          ))}
+          )}
         </div>
         <Button
-          onClick={() => { setDecoySkin(selectedSkin); setStep(3); }}
-          className="w-full h-12 text-base mb-8"
-        >
+          onClick={() => {setDecoySkin(selectedSkin);setStep(3);}}
+          className="w-full h-12 text-base mb-8">
+          
           Continue
         </Button>
-      </div>
-    );
+      </div>);
+
   }
 
   // Step 3: Safety notice
@@ -134,6 +134,6 @@ export function Onboarding() {
       <Button onClick={completeOnboarding} className="w-full max-w-xs h-12 text-base">
         I understand
       </Button>
-    </div>
-  );
+    </div>);
+
 }
