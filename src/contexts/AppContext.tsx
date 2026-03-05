@@ -9,6 +9,8 @@ interface AppContextType {
   exitToDecoy: () => void;
   decoySkin: DecoySkin;
   setDecoySkin: (skin: DecoySkin) => void;
+  hasAcceptedPrivacy: boolean;
+  acceptPrivacy: () => void;
   hasCompletedOnboarding: boolean;
   completeOnboarding: () => void;
   resetApp: () => void;
@@ -19,7 +21,13 @@ const AppContext = createContext<AppContextType | null>(null);
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [mode, setMode] = useState<AppMode>('decoy');
   const [decoySkin, setDecoySkinState] = useState<DecoySkin>(storage.getDecoySkin());
+  const [hasAcceptedPrivacy, setHasAcceptedPrivacy] = useState(storage.isPrivacyAccepted());
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(storage.isOnboardingComplete());
+
+  const acceptPrivacy = useCallback(() => {
+    storage.setPrivacyAccepted();
+    setHasAcceptedPrivacy(true);
+  }, []);
 
   const toggleMode = useCallback(() => {
     setMode(prev => prev === 'decoy' ? 'real' : 'decoy');
@@ -42,13 +50,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const resetApp = useCallback(() => {
     // Clear all safestep keys
     Object.keys(localStorage).filter(k => k.startsWith('safestep_')).forEach(k => localStorage.removeItem(k));
+    setHasAcceptedPrivacy(false);
     setHasCompletedOnboarding(false);
     setDecoySkinState('recipe');
     setMode('decoy');
   }, []);
 
   return (
-    <AppContext.Provider value={{ mode, toggleMode, exitToDecoy, decoySkin, setDecoySkin, hasCompletedOnboarding, completeOnboarding, resetApp }}>
+    <AppContext.Provider value={{ mode, toggleMode, exitToDecoy, decoySkin, setDecoySkin, hasAcceptedPrivacy, acceptPrivacy, hasCompletedOnboarding, completeOnboarding, resetApp }}>
       {children}
     </AppContext.Provider>
   );
