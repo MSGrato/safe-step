@@ -1,4 +1,5 @@
 const KEYS = {
+  privacyAccepted: 'safestep_privacy_accepted',
   onboardingComplete: 'safestep_onboarding_complete',
   decoySkin: 'safestep_decoy_skin',
   intakeAnswers: 'safestep_intake_answers',
@@ -28,6 +29,9 @@ export type ChatMessage = {
 };
 
 export const storage = {
+  isPrivacyAccepted: () => localStorage.getItem(KEYS.privacyAccepted) === 'true',
+  setPrivacyAccepted: () => localStorage.setItem(KEYS.privacyAccepted, 'true'),
+
   isOnboardingComplete: () => localStorage.getItem(KEYS.onboardingComplete) === 'true',
   setOnboardingComplete: () => localStorage.setItem(KEYS.onboardingComplete, 'true'),
 
