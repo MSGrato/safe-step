@@ -13,7 +13,7 @@ const Index = () => {
   if (mode === 'decoy') {
     const DecoyComponent = decoySkin === 'notes' ? NotesApp : decoySkin === 'calculator' ? CalculatorApp : RecipeApp;
     return (
-      <div className="no-select" onClick={handleTripleTap}>
+      <div className="no-select" onPointerDown={handleTripleTap}>
         <DecoyComponent />
       </div>
     );
