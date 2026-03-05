@@ -65,7 +65,7 @@ export function SafetyCheckScreen({ onSafe, onExit }: SafetyCheckScreenProps) {
           disabled
           className="w-full h-12 text-base"
         >
-          <AlertTriangle className="w-4 h-4 mr-2" />
+          <AlertTriangle className="w-6 h-6 mr-2" color="#eb0a0a" />
           No, I need 911
         </Button>
       </div>
