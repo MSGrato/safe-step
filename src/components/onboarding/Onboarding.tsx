@@ -5,18 +5,18 @@ import { PRIVACY_POLICY_SECTIONS } from '@/lib/privacyPolicy';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Shield, BookOpen, Calculator, StickyNote, AlertTriangle, Hand } from 'lucide-react';
+import { Shield, BookOpen, CloudSun, StickyNote, AlertTriangle, Hand } from 'lucide-react';
 
 const skins: { id: DecoySkin; label: string; icon: React.ReactNode; desc: string }[] = [
   { id: 'recipe', label: 'Recipe App', icon: <BookOpen className="w-8 h-8" />, desc: 'A food recipe collection' },
   { id: 'notes', label: 'Notes App', icon: <StickyNote className="w-8 h-8" />, desc: 'A simple notepad' },
-  { id: 'calculator', label: 'Calculator', icon: <Calculator className="w-8 h-8" />, desc: 'A standard calculator' },
+  { id: 'weather', label: 'Weather', icon: <CloudSun className="w-8 h-8" />, desc: 'A weather forecast app' },
 ];
 
 const accessInstructions: Record<DecoySkin, string> = {
   recipe: "Triple-tap the 'My Recipes' title",
   notes: "Triple-tap the 'Notes' title",
-  calculator: "Triple-tap the 'C' button",
+  weather: "Triple-tap the 'Weather' title",
 };
 
 export function Onboarding() {
