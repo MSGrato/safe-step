@@ -39,8 +39,9 @@ export function SafetyCheckScreen({ onSafe, onExit }: SafetyCheckScreenProps) {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-8 text-center">
-      <div className="w-20 h-20 rounded-full bg-destructive/10 flex items-center justify-center mb-8">
-        <Shield className="w-10 h-10 text-destructive" fill="hsl(var(--destructive))" fillOpacity={0.2} />
+      <div className="relative w-20 h-20 flex items-center justify-center mb-8">
+        <div className="absolute inset-0 rounded-full bg-destructive/10" />
+        <Shield className="relative z-10 w-10 h-10" color="#eb0a0a" fill="#eb0a0a" fillOpacity={0.2} />
       </div>
       <h1 className="text-xl font-semibold text-foreground mb-2">Are you safe?</h1>
       <p className="text-muted-foreground mb-10">
