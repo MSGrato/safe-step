@@ -1,35 +1,26 @@
 
 
-## Plan: Privacy Policy Acceptance Screen in Onboarding
+## Plan: Show Onboarding Before Decoy on First Launch
 
-### What
-Add a new step at the very beginning of the onboarding flow (before the "You are safe here" screen) that displays the full SafeStep Privacy Policy text and requires the user to check a checkbox confirming they've read it before proceeding.
+### Current Flow
+1. App opens → Decoy UI immediately
+2. Triple-tap → Real mode → Onboarding (Privacy → Welcome → Skin → Safety)
 
-### How
+### New Flow
+1. App opens → "You are Safe" screen → Privacy Policy → Skin selection → Safety notice
+2. After onboarding completes → Decoy UI
+3. Triple-tap → Real interface (no onboarding again)
 
-**1. Store the privacy policy content as a constant**
-- Create `src/lib/privacyPolicy.ts` with the full privacy policy text broken into sections (title, sections 1-12, contact info)
-- Each section as a string constant for clean rendering
+### Changes
 
-**2. Update `src/lib/storage.ts`**
-- Add a `privacyAccepted` key to `KEYS`
-- Add `isPrivacyAccepted()` and `setPrivacyAccepted()` helpers
+**`src/pages/Index.tsx`**
+- Before showing decoy, check `hasCompletedOnboarding`. If false, show `<Onboarding />` regardless of mode.
+- Remove the onboarding check from inside the `mode === 'real'` block — onboarding is now a top-level gate.
 
-**3. Update `src/contexts/AppContext.tsx`**
-- Add `hasAcceptedPrivacy` state (initialized from storage)
-- Add `acceptPrivacy()` callback
-- Include in context value
-- Update `resetApp` to also clear privacy acceptance
+**`src/components/onboarding/Onboarding.tsx`**
+- Reorder steps: Step 0 = "You are Safe" (currently step 1), Step 1 = Privacy Policy (currently step 0), Step 2 = Skin selection, Step 3 = Safety notice.
+- Adjust initial step logic: always start at step 0 on first launch. If privacy already accepted, skip to step 2.
 
-**4. Update `src/components/onboarding/Onboarding.tsx`**
-- Insert a new step 0 (shift existing steps to 1, 2, 3)
-- New step 0: Privacy Policy screen with:
-  - "Privacy Policy & Disclosures" heading
-  - ScrollArea containing the full policy text rendered with proper headings and paragraphs
-  - Checkbox at the bottom: "I have read and accept the Privacy Policy"
-  - "Continue" button disabled until checkbox is checked
-- The safety notice at top of the policy is already in the PDF content
-
-**5. Update `src/pages/Index.tsx`**
-- Check `hasAcceptedPrivacy` — if false and in real mode, show onboarding starting from the privacy step (this is already handled since onboarding resets with `resetApp`)
+**`src/contexts/AppContext.tsx`**
+- No changes needed — `hasCompletedOnboarding` already tracks this.
 
