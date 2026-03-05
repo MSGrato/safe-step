@@ -98,9 +98,9 @@ export function NotesApp({ onTripleTap }: { onTripleTap?: () => void }) {
 
   if (view === 'edit') {
     return (
-      <div className="min-h-screen bg-neutral-50">
+      <div className="min-h-screen bg-background">
         <div className="px-5 pt-12 pb-3 flex items-center justify-between">
-          <button onClick={handleSave} className="text-neutral-900 text-sm font-medium flex items-center gap-1">
+          <button onClick={handleSave} className="text-foreground text-sm font-medium flex items-center gap-1">
             <ArrowLeft className="w-4 h-4" /> Done
           </button>
           <div className="flex gap-3">
@@ -117,7 +117,7 @@ export function NotesApp({ onTripleTap }: { onTripleTap?: () => void }) {
               <button
                 key={c}
                 onClick={() => setEditColor(c)}
-                className={`w-7 h-7 rounded-full shrink-0 ${c} ${editColor === c ? 'ring-2 ring-neutral-900 ring-offset-2' : ''}`}
+                className={`w-7 h-7 rounded-full shrink-0 ${c} ${editColor === c ? 'ring-2 ring-foreground ring-offset-2' : ''}`}
               />
             ))}
           </div>
@@ -125,14 +125,14 @@ export function NotesApp({ onTripleTap }: { onTripleTap?: () => void }) {
             value={editTitle}
             onChange={e => setEditTitle(e.target.value)}
             placeholder="Title"
-            className="w-full bg-transparent text-2xl font-bold text-neutral-900 outline-none placeholder:text-neutral-300"
+            className="w-full bg-transparent text-2xl font-bold text-foreground outline-none placeholder:text-muted-foreground/50"
             autoFocus
           />
           <textarea
             value={editContent}
             onChange={e => setEditContent(e.target.value)}
             placeholder="Start writing..."
-            className="w-full bg-transparent text-neutral-700 text-base outline-none placeholder:text-neutral-300 resize-none min-h-[60vh]"
+            className="w-full bg-transparent text-foreground/80 text-base outline-none placeholder:text-muted-foreground/50 resize-none min-h-[60vh]"
           />
         </div>
       </div>
@@ -140,10 +140,10 @@ export function NotesApp({ onTripleTap }: { onTripleTap?: () => void }) {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-background">
       <div className="px-5 pt-12 pb-4">
-        <h1 className="text-3xl font-bold text-neutral-900 mb-1" onPointerDown={onTripleTap}>Notes</h1>
-        <p className="text-sm text-neutral-500">{notes.length} note{notes.length !== 1 ? 's' : ''}</p>
+        <h1 className="text-3xl font-bold text-foreground mb-1" onPointerDown={onTripleTap}>Notes</h1>
+        <p className="text-sm text-muted-foreground">{notes.length} note{notes.length !== 1 ? 's' : ''}</p>
       </div>
 
       {notes.length > 3 && (
@@ -153,14 +153,14 @@ export function NotesApp({ onTripleTap }: { onTripleTap?: () => void }) {
             placeholder="Search notes..."
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="w-full bg-neutral-200/60 rounded-xl px-4 py-2.5 text-sm text-neutral-900 outline-none placeholder:text-neutral-400"
+            className="w-full bg-muted rounded-xl px-4 py-2.5 text-sm text-foreground outline-none placeholder:text-muted-foreground"
           />
         </div>
       )}
 
       <div className="px-5 pb-24 space-y-3">
         {sorted.length === 0 && (
-          <p className="text-neutral-400 text-sm py-12 text-center">
+          <p className="text-muted-foreground text-sm py-12 text-center">
             {searchQuery ? 'No notes found.' : 'Tap + to create a note.'}
           </p>
         )}
@@ -170,16 +170,16 @@ export function NotesApp({ onTripleTap }: { onTripleTap?: () => void }) {
             onClick={() => openEdit(note)}
             className={`w-full ${note.color} rounded-2xl p-4 text-left active:scale-[0.98] transition-transform`}
           >
-            <h3 className="font-semibold text-neutral-900 mb-1">{note.title}</h3>
-            <p className="text-sm text-neutral-600 line-clamp-2">{note.content}</p>
-            <p className="text-xs text-neutral-400 mt-2">{timeAgo(note.updatedAt)}</p>
+            <h3 className="font-semibold text-foreground mb-1">{note.title}</h3>
+            <p className="text-sm text-foreground/70 line-clamp-2">{note.content}</p>
+            <p className="text-xs text-muted-foreground mt-2">{timeAgo(note.updatedAt)}</p>
           </button>
         ))}
       </div>
 
       <button
         onClick={openNew}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-neutral-900 text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform"
+        className="fixed bottom-6 right-6 w-14 h-14 bg-foreground text-background rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform"
       >
         <Plus className="w-6 h-6" />
       </button>
