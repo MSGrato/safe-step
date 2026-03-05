@@ -1,26 +1,47 @@
+## Plan: Revamp Onboarding Flow + Add Safety Check on Return
 
+### New Onboarding Order (6 steps)
 
-## Plan: Show Onboarding Before Decoy on First Launch
+1. **Safety Notice** — monitoring software warning (currently step 3)
+2. **Privacy Policy** — with acceptance checkbox (currently step 1)
+3. **"You are Safe"** — reassurance screen (currently step 0)
+4. **Skin Selection** — choose disguise (currently step 2)
+5. **How to Access** — dynamic instruction based on chosen skin:
+  - Recipe: "Triple-tap the 'My Recipes' title"
+  - Notes: "Triple-tap the 'Notes' title"
+  - Calculator: "Triple-tap the 'C' button"
+6. **Real UI onboarding** — complete onboarding, enter real interface for first time
 
-### Current Flow
-1. App opens → Decoy UI immediately
-2. Triple-tap → Real mode → Onboarding (Privacy → Welcome → Skin → Safety)
+### Returning User: Safety Check Screen
 
-### New Flow
-1. App opens → "You are Safe" screen → Privacy Policy → Skin selection → Safety notice
-2. After onboarding completes → Decoy UI
-3. Triple-tap → Real interface (no onboarding again)
+After onboarding is complete, when the user triple-taps to enter real mode, show an intermediate "Are you safe?" screen with 3 options:
 
-### Changes
+- **"Yes, I am safe"** → proceed to real UI
+- **"No, I need DV Hotline"** → show National DV Hotline info (1-800-799-7233) (phone number is a link to make a call)
+- **"No, I need 911"** → placeholder/non-functional for now
 
-**`src/pages/Index.tsx`**
-- Before showing decoy, check `hasCompletedOnboarding`. If false, show `<Onboarding />` regardless of mode.
-- Remove the onboarding check from inside the `mode === 'real'` block — onboarding is now a top-level gate.
+### File Changes
 
-**`src/components/onboarding/Onboarding.tsx`**
-- Reorder steps: Step 0 = "You are Safe" (currently step 1), Step 1 = Privacy Policy (currently step 0), Step 2 = Skin selection, Step 3 = Safety notice.
-- Adjust initial step logic: always start at step 0 on first launch. If privacy already accepted, skip to step 2.
+`**src/components/onboarding/Onboarding.tsx**`
 
-**`src/contexts/AppContext.tsx`**
-- No changes needed — `hasCompletedOnboarding` already tracks this.
+- Reorder steps: Safety Notice (0) → Privacy (1) → You are Safe (2) → Skin Selection (3) → Access Instructions (4) → first real UI entry (5)
+- Step 4 is new: shows dynamic text based on `selectedSkin` explaining which element to triple-tap
+- Step 5: calls `completeOnboarding()` and sets mode to `real`
 
+`**src/components/real/SafetyCheckScreen.tsx**` (new)
+
+- Three-button screen: "Yes, I am safe", "No, I need DV Hotline", "No, I need 911"
+- DV Hotline option shows contact info overlay
+- 911 option shows "coming soon" or placeholder
+- "Yes" proceeds to real interface
+
+`**src/pages/Index.tsx**`
+
+- Add a `showSafetyCheck` state. When `toggleMode` is triggered (triple-tap) and mode would become `real`, show `SafetyCheckScreen` first instead of going directly to `RealInterface`
+- On "Yes, I am safe" → set mode to real
+- On first launch after onboarding completes, go directly to real UI (skip safety check since they just onboarded)
+
+`**src/contexts/AppContext.tsx**`
+
+- Add `enterRealMode` function that sets mode to `real` (used by safety check)
+- Modify `toggleMode` behavior or add a flag so Index can intercept the transition
