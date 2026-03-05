@@ -80,7 +80,7 @@ export function CalculatorApp({ onTripleTap }: { onTripleTap?: () => void }) {
   const fontSize = display.length > 8 ? 'text-4xl' : display.length > 6 ? 'text-5xl' : 'text-6xl';
 
   return (
-    <div className="min-h-screen bg-neutral-950 flex flex-col justify-end pb-8">
+    <div className="min-h-screen bg-[hsl(30,6%,10%)] flex flex-col justify-end pb-8">
       <div className="px-6 pb-2">
         {prev && op && (
           <p className="text-right text-sm text-neutral-500 mb-1">
@@ -110,8 +110,8 @@ export function CalculatorApp({ onTripleTap }: { onTripleTap?: () => void }) {
                     ${isActiveOp ? 'bg-white text-orange-500' : ''}
                     ${isOp && !isActiveOp ? 'bg-orange-500 text-white active:bg-orange-300' : ''}
                     ${isEquals ? 'bg-orange-500 text-white active:bg-orange-300' : ''}
-                    ${isFunc ? 'bg-neutral-700 text-white active:bg-neutral-500' : ''}
-                    ${!isOp && !isFunc && !isEquals ? 'bg-neutral-800 text-white active:bg-neutral-600' : ''}
+                    ${isFunc ? 'bg-[hsl(30,6%,28%)] text-white active:bg-[hsl(30,6%,38%)]' : ''}
+                    ${!isOp && !isFunc && !isEquals ? 'bg-[hsl(30,6%,22%)] text-white active:bg-[hsl(30,6%,32%)]' : ''}
                   `}
                 >
                   {btn === '⌫' ? <Delete className="w-5 h-5" /> : btn}
