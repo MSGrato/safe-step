@@ -12,8 +12,8 @@ serve(async (req) => {
 
   try {
     const { answers } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
+    if (!ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY is not configured");
 
     const userMessage = `Here are my intake answers:
 - Children living with me: ${answers.children}
@@ -24,18 +24,18 @@ serve(async (req) => {
 
 Please generate my personalized safety checklist.`;
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
+        "x-api-key": ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: userMessage },
-        ],
+        model: "claude-sonnet-4-6",
+        max_tokens: 1024,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: "user", content: userMessage }],
       }),
     });
 
@@ -48,12 +48,12 @@ Please generate my personalized safety checklist.`;
         return new Response(JSON.stringify({ error: "Payment required" }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
       const t = await response.text();
-      console.error("AI gateway error:", status, t);
-      throw new Error("AI gateway error");
+      console.error("Anthropic API error:", status, t);
+      throw new Error("Anthropic API error");
     }
 
     const data = await response.json();
-    const plan = data.choices?.[0]?.message?.content || "";
+    const plan = data.content?.[0]?.text || "";
 
     return new Response(JSON.stringify({ plan }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
