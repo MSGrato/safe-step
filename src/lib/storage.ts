@@ -8,9 +8,24 @@ const KEYS = {
   chatHistory: 'safestep_chat_history',
   flaggedMessages: 'safestep_flagged_messages',
   zipCode: 'safestep_zip_code',
+  placesResults: 'safestep_places_results',
 };
 
 export type DecoySkin = 'recipe' | 'notes' | 'weather';
+
+export type PlaceResult = {
+  name: string;
+  address: string;
+  placeId: string;
+  mapsUrl: string;
+};
+
+export type PlacesResults = {
+  shelters: PlaceResult[];
+  legal: PlaceResult[];
+  counseling: PlaceResult[];
+  zip: string;
+};
 
 export type IntakeAnswers = {
   children: string;
@@ -69,4 +84,10 @@ export const storage = {
 
   getZipCode: (): string => localStorage.getItem(KEYS.zipCode) || '',
   setZipCode: (zip: string) => localStorage.setItem(KEYS.zipCode, zip),
+
+  getPlacesResults: (): PlacesResults | null => {
+    const data = localStorage.getItem(KEYS.placesResults);
+    return data ? JSON.parse(data) : null;
+  },
+  setPlacesResults: (results: PlacesResults) => localStorage.setItem(KEYS.placesResults, JSON.stringify(results)),
 };

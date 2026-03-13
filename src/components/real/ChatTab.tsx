@@ -36,6 +36,12 @@ export function ChatTab() {
     try {
       const chatMessages = updated.map(m => ({ role: m.role, content: m.content }));
 
+      const context = {
+        checklist: storage.getSafetyChecklist() ?? undefined,
+        intake: storage.getIntakeAnswers() ?? undefined,
+        places: storage.getPlacesResults() ?? undefined,
+      };
+
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`,
         {
@@ -44,7 +50,7 @@ export function ChatTab() {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
           },
-          body: JSON.stringify({ messages: chatMessages }),
+          body: JSON.stringify({ messages: chatMessages, context }),
         }
       );
 

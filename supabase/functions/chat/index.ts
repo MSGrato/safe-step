@@ -10,9 +10,41 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { messages } = await req.json();
+    const { messages, context } = await req.json();
     const ANTHROPIC_API_KEY = Deno.env.get("AnthropicAPI");
     if (!ANTHROPIC_API_KEY) throw new Error("AnthropicAPI secret is not configured");
+
+    let systemPrompt = CHATBOT_PROMPT;
+
+    if (context) {
+      const parts: string[] = [];
+
+      if (context.intake) {
+        parts.push(`USER INTAKE ANSWERS:
+- Children: ${context.intake.children}
+- Finances: ${context.intake.finances}
+- ID documents: ${context.intake.documents}
+- Trusted contact: ${context.intake.trustedPerson}
+- Timeline: ${context.intake.timeline}`);
+      }
+
+      if (context.checklist) {
+        parts.push(`USER'S PERSONALIZED SAFETY CHECKLIST:\n${context.checklist}`);
+      }
+
+      if (context.places) {
+        const fmt = (list: { name: string; address: string }[]) =>
+          list.length ? list.map(p => `  - ${p.name} (${p.address})`).join("\n") : "  None found";
+        parts.push(`LOCAL RESOURCES NEAR ${context.places.zip}:
+Shelters:\n${fmt(context.places.shelters)}
+Legal Aid:\n${fmt(context.places.legal)}
+Counseling:\n${fmt(context.places.counseling)}`);
+      }
+
+      if (parts.length) {
+        systemPrompt += `\n\n---\nThe following context is specific to this user. Use it to give personalized, relevant responses. Do not repeat it back verbatim.\n\n${parts.join("\n\n")}`;
+      }
+    }
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -24,7 +56,7 @@ serve(async (req) => {
       body: JSON.stringify({
         model: "claude-haiku-4-5-20251001",
         max_tokens: 1024,
-        system: CHATBOT_PROMPT,
+        system: systemPrompt,
         messages,
         stream: true,
       }),

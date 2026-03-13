@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Phone, MapPin, ExternalLink, Loader2 } from 'lucide-react';
-import { storage } from '@/lib/storage';
+import { storage, type PlacesResults } from '@/lib/storage';
 import { toast } from 'sonner';
 
 interface PlaceResult {
@@ -70,11 +70,14 @@ export function ResourcesTab() {
         )
       );
 
-      setResults({
+      const placesResults: PlacesResults = {
         shelters: sheltersRes.results ?? [],
         legal: legalRes.results ?? [],
         counseling: counselingRes.results ?? [],
-      });
+        zip: zip.trim(),
+      };
+      setResults(placesResults);
+      storage.setPlacesResults(placesResults);
     } catch {
       toast.error('Unable to search. Please try again.');
     } finally {
