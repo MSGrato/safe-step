@@ -39,16 +39,16 @@ function saveLocation(loc: WeatherLocation) {
 
 // Maps WMO weather codes to icons and descriptions
 function getWeatherInfo(code: number, isDay: boolean): { icon: React.ReactNode; description: string } {
-  if (code === 0) return { icon: <Sun className="w-16 h-16 text-decoy-accent" />, description: 'Clear sky' };
-  if (code <= 3) return { icon: <Cloud className="w-16 h-16 text-decoy-muted" />, description: code === 1 ? 'Mainly clear' : code === 2 ? 'Partly cloudy' : 'Overcast' };
-  if (code <= 49) return { icon: <CloudFog className="w-16 h-16 text-decoy-muted" />, description: 'Foggy' };
-  if (code <= 59) return { icon: <CloudDrizzle className="w-16 h-16 text-decoy-accent" />, description: 'Drizzle' };
-  if (code <= 69) return { icon: <CloudRain className="w-16 h-16 text-decoy-accent" />, description: 'Rain' };
-  if (code <= 79) return { icon: <CloudSnow className="w-16 h-16 text-decoy-muted" />, description: 'Snow' };
-  if (code <= 84) return { icon: <CloudRain className="w-16 h-16 text-decoy-accent" />, description: 'Rain showers' };
-  if (code <= 86) return { icon: <CloudSnow className="w-16 h-16 text-decoy-muted" />, description: 'Snow showers' };
-  if (code <= 99) return { icon: <CloudLightning className="w-16 h-16 text-decoy-accent" />, description: 'Thunderstorm' };
-  return { icon: <Cloud className="w-16 h-16 text-decoy-muted" />, description: 'Unknown' };
+  if (code === 0) return { icon: <Sun className="w-20 h-20 text-decoy-accent" />, description: 'Clear Sky' };
+  if (code <= 3) return { icon: <Cloud className="w-20 h-20 text-decoy-muted" />, description: code === 1 ? 'Mainly Clear' : code === 2 ? 'Partly Cloudy' : 'Overcast' };
+  if (code <= 49) return { icon: <CloudFog className="w-20 h-20 text-decoy-muted" />, description: 'Foggy' };
+  if (code <= 59) return { icon: <CloudDrizzle className="w-20 h-20 text-decoy-accent" />, description: 'Drizzle' };
+  if (code <= 69) return { icon: <CloudRain className="w-20 h-20 text-decoy-accent" />, description: 'Rain' };
+  if (code <= 79) return { icon: <CloudSnow className="w-20 h-20 text-decoy-muted" />, description: 'Snow' };
+  if (code <= 84) return { icon: <CloudRain className="w-20 h-20 text-decoy-accent" />, description: 'Rain Showers' };
+  if (code <= 86) return { icon: <CloudSnow className="w-20 h-20 text-decoy-muted" />, description: 'Snow Showers' };
+  if (code <= 99) return { icon: <CloudLightning className="w-20 h-20 text-decoy-accent" />, description: 'Thunderstorm' };
+  return { icon: <Cloud className="w-20 h-20 text-decoy-muted" />, description: 'Unknown' };
 }
 
 export function WeatherApp({ onTripleTap }: { onTripleTap?: () => void }) {
@@ -129,9 +129,15 @@ export function WeatherApp({ onTripleTap }: { onTripleTap?: () => void }) {
   if (!location) {
     return (
       <div className="min-h-screen bg-decoy-bg">
-        <div className="bg-decoy-card px-5 pt-12 pb-5 shadow-sm">
-          <h1 className="text-2xl font-bold text-decoy-text mb-4" onPointerDown={onTripleTap}>Weather</h1>
-          <div className="flex items-center gap-2 bg-decoy-bg rounded-xl px-4 py-3">
+        {/* Header */}
+        <div className="bg-decoy-card border-b border-[hsl(var(--border))] px-5 pt-12 pb-4 shadow-sm">
+          <h1 className="text-2xl font-bold text-decoy-text" onPointerDown={onTripleTap}>Weather</h1>
+          <p className="text-sm text-decoy-muted mt-0.5">Find your location to get started</p>
+        </div>
+
+        {/* Search bar */}
+        <div className="px-5 py-4">
+          <div className="flex items-center gap-2 bg-decoy-card rounded-2xl px-4 py-3 shadow-sm border border-[hsl(var(--border))]">
             <Search className="w-4 h-4 text-decoy-muted shrink-0" />
             <input
               type="text"
@@ -141,25 +147,28 @@ export function WeatherApp({ onTripleTap }: { onTripleTap?: () => void }) {
               onKeyDown={e => e.key === 'Enter' && handleSearch()}
               className="bg-transparent text-decoy-text text-sm outline-none w-full placeholder:text-decoy-muted"
             />
-            <button onClick={handleSearch} disabled={searching} className="text-decoy-accent text-sm font-medium shrink-0">
+            <button onClick={handleSearch} disabled={searching} className="text-decoy-accent text-sm font-semibold shrink-0">
               {searching ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Search'}
             </button>
           </div>
         </div>
 
-        <div className="px-5 py-4 space-y-2">
+        <div className="px-5 space-y-2">
           {error && <p className="text-sm text-decoy-muted text-center py-4">{error}</p>}
           {searchResults.length === 0 && !error && (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <MapPin className="w-12 h-12 text-decoy-muted mb-4" />
-              <p className="text-decoy-muted text-sm">Enter a city name to get started</p>
+              <div className="w-16 h-16 rounded-full bg-decoy-card border border-[hsl(var(--border))] flex items-center justify-center mb-4 shadow-sm">
+                <MapPin className="w-8 h-8 text-decoy-accent" />
+              </div>
+              <p className="text-decoy-text font-medium">No location set</p>
+              <p className="text-decoy-muted text-sm mt-1">Enter a city name above</p>
             </div>
           )}
           {searchResults.map((result, i) => (
             <button
               key={i}
               onClick={() => selectLocation(result)}
-              className="w-full bg-decoy-card rounded-2xl p-4 shadow-sm flex items-center gap-4 text-left active:scale-[0.98] transition-transform"
+              className="w-full bg-decoy-card rounded-2xl p-4 shadow-sm border border-[hsl(var(--border))] flex items-center gap-4 text-left active:scale-[0.98] transition-transform"
             >
               <div className="w-10 h-10 rounded-xl bg-decoy-bg flex items-center justify-center shrink-0">
                 <MapPin className="w-5 h-5 text-decoy-accent" />
@@ -180,23 +189,26 @@ export function WeatherApp({ onTripleTap }: { onTripleTap?: () => void }) {
 
   return (
     <div className="min-h-screen bg-decoy-bg">
-      <div className="bg-decoy-card px-5 pt-12 pb-5 shadow-sm">
-        <div className="flex items-center justify-between mb-1">
-          <h1 className="text-2xl font-bold text-decoy-text" onPointerDown={onTripleTap}>Weather</h1>
+      {/* Header */}
+      <div className="bg-decoy-card border-b border-[hsl(var(--border))] px-5 pt-12 pb-4 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-decoy-text" onPointerDown={onTripleTap}>Weather</h1>
+            <div className="flex items-center gap-1.5 text-decoy-muted mt-0.5">
+              <MapPin className="w-3.5 h-3.5 text-decoy-accent" />
+              <span className="text-sm">{location.city}, {location.country}</span>
+            </div>
+          </div>
           <button
             onClick={() => { setLocation(null); localStorage.removeItem(LOCATION_KEY); }}
-            className="text-decoy-accent text-sm font-medium"
+            className="text-decoy-accent text-sm font-semibold"
           >
             Change
           </button>
         </div>
-        <div className="flex items-center gap-1.5 text-decoy-muted">
-          <MapPin className="w-3.5 h-3.5" />
-          <span className="text-sm">{location.city}, {location.country}</span>
-        </div>
       </div>
 
-      <div className="px-5 py-6">
+      <div className="px-5 py-5">
         {loading && (
           <div className="flex flex-col items-center justify-center py-20">
             <Loader2 className="w-10 h-10 text-decoy-accent animate-spin" />
@@ -207,48 +219,53 @@ export function WeatherApp({ onTripleTap }: { onTripleTap?: () => void }) {
         {error && !loading && (
           <div className="text-center py-20">
             <p className="text-sm text-decoy-muted">{error}</p>
-            <button onClick={() => fetchWeather(location.lat, location.lon)} className="text-decoy-accent text-sm font-medium mt-2">
+            <button onClick={() => fetchWeather(location.lat, location.lon)} className="text-decoy-accent text-sm font-semibold mt-2">
               Try again
             </button>
           </div>
         )}
 
         {weather && weatherInfo && !loading && (
-          <div className="space-y-5">
-            {/* Main temperature card */}
-            <div className="bg-decoy-card rounded-2xl p-6 shadow-sm flex flex-col items-center text-center">
-              {weatherInfo.icon}
-              <p className="text-6xl font-bold text-decoy-text mt-4">{weather.temperature}°</p>
-              <p className="text-base text-decoy-muted mt-1">{weatherInfo.description}</p>
-              <p className="text-sm text-decoy-muted mt-2">
-                H: {weather.temperatureMax}° &nbsp; L: {weather.temperatureMin}°
-              </p>
+          <div className="space-y-4">
+            {/* Main temperature card — tinted sky background */}
+            <div className="bg-decoy-card rounded-3xl p-8 shadow-sm border border-[hsl(var(--border))] flex flex-col items-center text-center overflow-hidden relative">
+              {/* Subtle sky tint overlay */}
+              <div className="absolute inset-0 bg-[hsl(var(--decoy-accent)/0.06)] pointer-events-none" />
+              <div className="relative">
+                {weatherInfo.icon}
+                <p className="text-7xl font-thin text-decoy-text mt-3 tracking-tight">{weather.temperature}°</p>
+                <p className="text-lg font-medium text-decoy-text mt-1">{weatherInfo.description}</p>
+                <p className="text-sm text-decoy-muted mt-1">
+                  H: {weather.temperatureMax}°&ensp;/&ensp;L: {weather.temperatureMin}°
+                </p>
+              </div>
             </div>
 
             {/* Details row */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-decoy-card rounded-2xl p-4 shadow-sm flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-decoy-bg flex items-center justify-center">
+              <div className="bg-decoy-card rounded-2xl p-4 shadow-sm border border-[hsl(var(--border))] flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-decoy-bg flex items-center justify-center shrink-0">
                   <Droplets className="w-5 h-5 text-decoy-accent" />
                 </div>
                 <div>
-                  <p className="text-xs text-decoy-muted">Humidity</p>
-                  <p className="text-lg font-semibold text-decoy-text">{weather.humidity}%</p>
+                  <p className="text-xs text-decoy-muted uppercase tracking-wide">Humidity</p>
+                  <p className="text-xl font-semibold text-decoy-text">{weather.humidity}%</p>
                 </div>
               </div>
-              <div className="bg-decoy-card rounded-2xl p-4 shadow-sm flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-decoy-bg flex items-center justify-center">
+              <div className="bg-decoy-card rounded-2xl p-4 shadow-sm border border-[hsl(var(--border))] flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-decoy-bg flex items-center justify-center shrink-0">
                   <Wind className="w-5 h-5 text-decoy-accent" />
                 </div>
                 <div>
-                  <p className="text-xs text-decoy-muted">Wind</p>
-                  <p className="text-lg font-semibold text-decoy-text">{weather.windSpeed} mph</p>
+                  <p className="text-xs text-decoy-muted uppercase tracking-wide">Wind</p>
+                  <p className="text-xl font-semibold text-decoy-text">{weather.windSpeed} <span className="text-sm font-normal">mph</span></p>
                 </div>
               </div>
             </div>
 
             {/* Search for another location */}
-            <div className="bg-decoy-card rounded-2xl p-4 shadow-sm">
+            <div className="bg-decoy-card rounded-2xl p-4 shadow-sm border border-[hsl(var(--border))]">
+              <p className="text-xs text-decoy-muted uppercase tracking-wide mb-3">Search Location</p>
               <div className="flex items-center gap-2 bg-decoy-bg rounded-xl px-4 py-3">
                 <Search className="w-4 h-4 text-decoy-muted shrink-0" />
                 <input
@@ -259,7 +276,7 @@ export function WeatherApp({ onTripleTap }: { onTripleTap?: () => void }) {
                   onKeyDown={e => e.key === 'Enter' && handleSearch()}
                   className="bg-transparent text-decoy-text text-sm outline-none w-full placeholder:text-decoy-muted"
                 />
-                <button onClick={handleSearch} disabled={searching} className="text-decoy-accent text-sm font-medium shrink-0">
+                <button onClick={handleSearch} disabled={searching} className="text-decoy-accent text-sm font-semibold shrink-0">
                   {searching ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Go'}
                 </button>
               </div>

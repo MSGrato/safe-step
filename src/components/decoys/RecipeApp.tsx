@@ -138,11 +138,11 @@ export function RecipeApp({ onTripleTap }: { onTripleTap?: () => void }) {
   if (view === 'detail' && selected) {
     return (
       <div className="min-h-screen bg-decoy-bg">
-        <div className="bg-decoy-card px-5 pt-12 pb-5 shadow-sm">
+        <div className="bg-decoy-card border-b border-[hsl(var(--border))] px-5 pt-12 pb-5 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <button onClick={() => setView('list')} className="flex items-center gap-1 text-decoy-accent">
               <ArrowLeft className="w-4 h-4" />
-              <span className="text-sm font-medium">Back</span>
+              <span className="text-sm font-semibold">Back</span>
             </button>
             <div className="flex gap-3">
               <button onClick={() => openEdit(selected)} className="text-decoy-accent">
@@ -168,7 +168,7 @@ export function RecipeApp({ onTripleTap }: { onTripleTap?: () => void }) {
           {selected.ingredients.trim() && (
             <div>
               <h2 className="text-lg font-semibold text-decoy-text mb-3">Ingredients</h2>
-              <div className="bg-decoy-card rounded-2xl p-4 shadow-sm space-y-2">
+              <div className="bg-decoy-card rounded-2xl p-4 shadow-sm border border-[hsl(var(--border))] space-y-2">
                 {selected.ingredients.split('\n').filter(Boolean).map((line, i) => (
                   <div key={i} className="flex items-start gap-3">
                     <span className="w-1.5 h-1.5 rounded-full bg-decoy-accent mt-2 shrink-0" />
@@ -197,8 +197,8 @@ export function RecipeApp({ onTripleTap }: { onTripleTap?: () => void }) {
   if (view === 'edit') {
     return (
       <div className="min-h-screen bg-decoy-bg">
-        <div className="bg-decoy-card px-5 pt-12 pb-4 shadow-sm flex items-center justify-between">
-          <button onClick={() => { selectedId ? setView('detail') : setView('list'); }} className="text-decoy-accent text-sm font-medium">Cancel</button>
+        <div className="bg-decoy-card border-b border-[hsl(var(--border))] px-5 pt-12 pb-4 shadow-sm flex items-center justify-between">
+          <button onClick={() => { selectedId ? setView('detail') : setView('list'); }} className="text-decoy-accent text-sm font-semibold">Cancel</button>
           <h1 className="text-lg font-semibold text-decoy-text">{editId ? 'Edit Recipe' : 'New Recipe'}</h1>
           <button onClick={handleSave} className="text-decoy-accent text-sm font-bold">Save</button>
         </div>
@@ -276,14 +276,17 @@ export function RecipeApp({ onTripleTap }: { onTripleTap?: () => void }) {
   // --- List View ---
   return (
     <div className="min-h-screen bg-decoy-bg">
-      <div className="bg-decoy-card px-5 pt-12 pb-4 shadow-sm">
+      <div className="bg-decoy-card border-b border-[hsl(var(--border))] px-5 pt-12 pb-4 shadow-sm">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold text-decoy-text" onPointerDown={onTripleTap}>My Recipes</h1>
+          <div onPointerDown={onTripleTap}>
+            <h1 className="text-2xl font-bold text-decoy-text">My Recipes</h1>
+            <p className="text-sm text-decoy-muted">{recipes.length} recipe{recipes.length !== 1 ? 's' : ''}</p>
+          </div>
           <button onClick={openNew} className="w-9 h-9 rounded-full bg-decoy-accent text-white flex items-center justify-center shadow">
             <Plus className="w-5 h-5" />
           </button>
         </div>
-        <div className="flex items-center gap-2 bg-decoy-bg rounded-xl px-4 py-3">
+        <div className="flex items-center gap-2 bg-decoy-bg rounded-xl px-4 py-2.5">
           <Search className="w-4 h-4 text-decoy-muted" />
           <input
             type="text"
@@ -305,7 +308,7 @@ export function RecipeApp({ onTripleTap }: { onTripleTap?: () => void }) {
           <button
             key={recipe.id}
             onClick={() => { setSelectedId(recipe.id); setView('detail'); }}
-            className="w-full bg-decoy-card rounded-2xl p-4 shadow-sm flex items-center gap-4 text-left active:scale-[0.98] transition-transform"
+            className="w-full bg-decoy-card rounded-2xl p-4 shadow-sm border border-[hsl(var(--border))] flex items-center gap-4 text-left active:scale-[0.98] transition-transform"
           >
             <div className="w-14 h-14 rounded-xl bg-decoy-bg flex items-center justify-center text-3xl shrink-0">
               {recipe.emoji}

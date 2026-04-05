@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, ArrowLeft, Trash2, Pencil } from 'lucide-react';
+import { Plus, ArrowLeft, Trash2 } from 'lucide-react';
 
 type Note = {
   id: string;
@@ -10,14 +10,37 @@ type Note = {
 };
 
 const STORAGE_KEY = 'safestep_decoy_notes';
-const COLORS = ['bg-yellow-100', 'bg-blue-100', 'bg-green-100', 'bg-purple-100', 'bg-orange-100', 'bg-pink-100', 'bg-red-100', 'bg-teal-100'];
+
+// Accent bar colors — subtle left-border strips like a modern notes app
+const COLORS = [
+  'border-yellow-400',
+  'border-blue-400',
+  'border-green-500',
+  'border-purple-400',
+  'border-orange-400',
+  'border-pink-400',
+  'border-red-400',
+  'border-teal-500',
+];
+
+// Dot swatches shown in the color picker
+const SWATCHES = [
+  'bg-yellow-400',
+  'bg-blue-400',
+  'bg-green-500',
+  'bg-purple-400',
+  'bg-orange-400',
+  'bg-pink-400',
+  'bg-red-400',
+  'bg-teal-500',
+];
 
 const DEFAULT_NOTES: Note[] = [
-  { id: '1', title: 'Grocery List', content: 'Milk, eggs, bread, butter, cheese, spinach, chicken, rice, olive oil', color: 'bg-yellow-100', updatedAt: Date.now() - 60000 },
-  { id: '2', title: 'Meeting Notes', content: 'Discuss Q2 targets and team updates\n- Review marketing budget\n- Assign new project leads\n- Schedule follow-up for next Friday', color: 'bg-blue-100', updatedAt: Date.now() - 120000 },
-  { id: '3', title: 'Book Recommendations', content: '1. Atomic Habits\n2. Deep Work\n3. The Alchemist\n4. Thinking, Fast and Slow\n5. Sapiens', color: 'bg-green-100', updatedAt: Date.now() - 180000 },
-  { id: '4', title: 'Weekend Plans', content: 'Saturday: farmers market in the morning, yoga at noon\nSunday: brunch with Sarah, afternoon hike', color: 'bg-purple-100', updatedAt: Date.now() - 240000 },
-  { id: '5', title: 'Recipe Ideas', content: 'Try making homemade pasta this week\nLook up Thai curry recipe\nBake banana bread with overripe bananas', color: 'bg-orange-100', updatedAt: Date.now() - 300000 },
+  { id: '1', title: 'Grocery List', content: 'Milk, eggs, bread, butter, cheese, spinach, chicken, rice, olive oil', color: 'border-yellow-400', updatedAt: Date.now() - 60000 },
+  { id: '2', title: 'Meeting Notes', content: 'Discuss Q2 targets and team updates\n- Review marketing budget\n- Assign new project leads\n- Schedule follow-up for next Friday', color: 'border-blue-400', updatedAt: Date.now() - 120000 },
+  { id: '3', title: 'Book Recommendations', content: '1. Atomic Habits\n2. Deep Work\n3. The Alchemist\n4. Thinking, Fast and Slow\n5. Sapiens', color: 'border-green-500', updatedAt: Date.now() - 180000 },
+  { id: '4', title: 'Weekend Plans', content: 'Saturday: farmers market in the morning, yoga at noon\nSunday: brunch with Sarah, afternoon hike', color: 'border-purple-400', updatedAt: Date.now() - 240000 },
+  { id: '5', title: 'Recipe Ideas', content: 'Try making homemade pasta this week\nLook up Thai curry recipe\nBake banana bread with overripe bananas', color: 'border-orange-400', updatedAt: Date.now() - 300000 },
 ];
 
 function loadNotes(): Note[] {
@@ -26,7 +49,13 @@ function loadNotes(): Note[] {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_NOTES));
     return DEFAULT_NOTES;
   }
-  return JSON.parse(data);
+  // Migrate old bg-* color values to new border-* values if needed
+  const notes: Note[] = JSON.parse(data);
+  const migrated = notes.map((n, i) => ({
+    ...n,
+    color: n.color.startsWith('border-') ? n.color : COLORS[i % COLORS.length],
+  }));
+  return migrated;
 }
 
 function saveNotes(notes: Note[]) {
@@ -96,31 +125,38 @@ export function NotesApp({ onTripleTap }: { onTripleTap?: () => void }) {
     setView('list');
   };
 
+  // --- Edit view ---
   if (view === 'edit') {
+    const swatchIndex = COLORS.indexOf(editColor);
     return (
       <div className="min-h-screen bg-background">
-        <div className="px-5 pt-12 pb-3 flex items-center justify-between">
-          <button onClick={handleSave} className="text-foreground text-sm font-medium flex items-center gap-1">
+        {/* Header */}
+        <div className="bg-card border-b border-border px-5 pt-12 pb-4 flex items-center justify-between shadow-sm">
+          <button onClick={handleSave} className="flex items-center gap-1 text-primary text-sm font-semibold">
             <ArrowLeft className="w-4 h-4" /> Done
           </button>
-          <div className="flex gap-3">
-            {editId && (
-              <button onClick={() => handleDelete(editId)} className="text-red-400">
-                <Trash2 className="w-4 h-4" />
-              </button>
-            )}
-          </div>
+          <span className="text-base font-semibold text-foreground">{editId ? 'Edit Note' : 'New Note'}</span>
+          {editId ? (
+            <button onClick={() => handleDelete(editId)} className="text-red-500">
+              <Trash2 className="w-4 h-4" />
+            </button>
+          ) : (
+            <div className="w-10" />
+          )}
         </div>
-        <div className="px-5 space-y-3">
-          <div className="flex gap-1.5 overflow-x-auto pb-1">
-            {COLORS.map(c => (
+
+        <div className="px-5 py-4 space-y-4">
+          {/* Color picker */}
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {SWATCHES.map((swatch, i) => (
               <button
-                key={c}
-                onClick={() => setEditColor(c)}
-                className={`w-7 h-7 rounded-full shrink-0 ${c} ${editColor === c ? 'ring-2 ring-foreground ring-offset-2' : ''}`}
+                key={swatch}
+                onClick={() => setEditColor(COLORS[i])}
+                className={`w-7 h-7 rounded-full shrink-0 ${swatch} ${swatchIndex === i ? 'ring-2 ring-offset-2 ring-foreground' : ''}`}
               />
             ))}
           </div>
+
           <input
             value={editTitle}
             onChange={e => setEditTitle(e.target.value)}
@@ -128,26 +164,30 @@ export function NotesApp({ onTripleTap }: { onTripleTap?: () => void }) {
             className="w-full bg-transparent text-2xl font-bold text-foreground outline-none placeholder:text-muted-foreground/50"
             autoFocus
           />
+          <div className="h-px bg-border" />
           <textarea
             value={editContent}
             onChange={e => setEditContent(e.target.value)}
             placeholder="Start writing..."
-            className="w-full bg-transparent text-foreground/80 text-base outline-none placeholder:text-muted-foreground/50 resize-none min-h-[60vh]"
+            className="w-full bg-transparent text-foreground text-base outline-none placeholder:text-muted-foreground/50 resize-none min-h-[60vh] leading-relaxed"
           />
         </div>
       </div>
     );
   }
 
+  // --- List view ---
   return (
     <div className="min-h-screen bg-background">
-      <div className="px-5 pt-12 pb-4">
-        <h1 className="text-3xl font-bold text-foreground mb-1" onPointerDown={onTripleTap}>Notes</h1>
-        <p className="text-sm text-muted-foreground">{notes.length} note{notes.length !== 1 ? 's' : ''}</p>
-      </div>
-
-      {notes.length > 3 && (
-        <div className="px-5 pb-3">
+      {/* Header */}
+      <div className="bg-card border-b border-border px-5 pt-12 pb-4 shadow-sm">
+        <div className="flex items-center justify-between mb-3">
+          <div onPointerDown={onTripleTap}>
+            <h1 className="text-2xl font-bold text-foreground">Notes</h1>
+            <p className="text-sm text-muted-foreground">{notes.length} note{notes.length !== 1 ? 's' : ''}</p>
+          </div>
+        </div>
+        {notes.length > 3 && (
           <input
             type="text"
             placeholder="Search notes..."
@@ -155,10 +195,10 @@ export function NotesApp({ onTripleTap }: { onTripleTap?: () => void }) {
             onChange={e => setSearchQuery(e.target.value)}
             className="w-full bg-muted rounded-xl px-4 py-2.5 text-sm text-foreground outline-none placeholder:text-muted-foreground"
           />
-        </div>
-      )}
+        )}
+      </div>
 
-      <div className="px-5 pb-24 space-y-3">
+      <div className="px-5 py-4 pb-24 space-y-2">
         {sorted.length === 0 && (
           <p className="text-muted-foreground text-sm py-12 text-center">
             {searchQuery ? 'No notes found.' : 'Tap + to create a note.'}
@@ -168,18 +208,19 @@ export function NotesApp({ onTripleTap }: { onTripleTap?: () => void }) {
           <button
             key={note.id}
             onClick={() => openEdit(note)}
-            className={`w-full ${note.color} rounded-2xl p-4 text-left active:scale-[0.98] transition-transform`}
+            className={`w-full bg-card rounded-2xl border-l-4 ${note.color} shadow-sm border border-border pl-4 pr-4 py-4 text-left active:scale-[0.98] transition-transform`}
           >
-            <h3 className="font-semibold text-foreground mb-1">{note.title}</h3>
-            <p className="text-sm text-foreground/70 line-clamp-2">{note.content}</p>
-            <p className="text-xs text-muted-foreground mt-2">{timeAgo(note.updatedAt)}</p>
+            <h3 className="font-semibold text-foreground mb-0.5 truncate">{note.title}</h3>
+            <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">{note.content}</p>
+            <p className="text-xs text-muted-foreground/70 mt-2">{timeAgo(note.updatedAt)}</p>
           </button>
         ))}
       </div>
 
+      {/* FAB */}
       <button
         onClick={openNew}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-foreground text-background rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform"
+        className="fixed bottom-6 right-6 w-14 h-14 bg-primary text-primary-foreground rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform"
       >
         <Plus className="w-6 h-6" />
       </button>

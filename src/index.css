@@ -132,6 +132,96 @@
   }
 }
 
+/* ──── Per-skin theme overrides ──── */
+/* Applied to the root wrapper div based on the user's chosen decoy.
+   Both --decoy-* tokens (used by decoy UIs) and the core shadcn tokens
+   (--background, --primary, etc., used by the real interface) are
+   overridden so the visual theme flows seamlessly from decoy → real UI. */
+
+.theme-weather {
+  /* Sky blue-gray — clean, atmospheric, reads like a stock weather app */
+  --background:         205 35% 94%;
+  --foreground:         215 25% 15%;
+  --card:               0 0% 100%;
+  --card-foreground:    215 25% 15%;
+  --popover:            0 0% 100%;
+  --popover-foreground: 215 25% 15%;
+  --primary:            207 55% 44%;   /* muted steel blue — active tabs, buttons */
+  --primary-foreground: 0 0% 100%;
+  --secondary:          207 20% 90%;
+  --secondary-foreground: 215 25% 15%;
+  --muted:              207 20% 90%;
+  --muted-foreground:   210 15% 50%;
+  --accent:             207 20% 90%;
+  --accent-foreground:  215 25% 15%;
+  --destructive:        0 65% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --border:             207 20% 86%;
+  --input:              207 20% 86%;
+  --ring:               207 55% 65%;
+  --decoy-bg:           205 35% 94%;
+  --decoy-card:         0 0% 100%;
+  --decoy-accent:       207 55% 44%;
+  --decoy-text:         215 25% 15%;
+  --decoy-muted:        210 15% 50%;
+}
+
+.theme-notes {
+  /* Warm cream + amber — reads like iOS Notes or a journaling app */
+  --background:         43 30% 95%;
+  --foreground:         30 15% 14%;
+  --card:               0 0% 100%;
+  --card-foreground:    30 15% 14%;
+  --popover:            0 0% 100%;
+  --popover-foreground: 30 15% 14%;
+  --primary:            36 60% 42%;   /* warm amber — active tabs, buttons */
+  --primary-foreground: 0 0% 100%;
+  --secondary:          40 18% 90%;
+  --secondary-foreground: 30 15% 14%;
+  --muted:              40 18% 90%;
+  --muted-foreground:   30 8% 48%;
+  --accent:             40 18% 90%;
+  --accent-foreground:  30 15% 14%;
+  --destructive:        0 65% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --border:             38 15% 85%;
+  --input:              38 15% 85%;
+  --ring:               36 60% 62%;
+  --decoy-bg:           43 30% 95%;
+  --decoy-card:         0 0% 100%;
+  --decoy-accent:       36 60% 42%;
+  --decoy-text:         30 15% 14%;
+  --decoy-muted:        30 8% 48%;
+}
+
+.theme-recipe {
+  /* Warm peach-beige + terracotta — reads like a food / cooking app */
+  --background:         22 30% 95%;
+  --foreground:         20 15% 14%;
+  --card:               0 0% 100%;
+  --card-foreground:    20 15% 14%;
+  --popover:            0 0% 100%;
+  --popover-foreground: 20 15% 14%;
+  --primary:            16 58% 46%;   /* terracotta — active tabs, buttons */
+  --primary-foreground: 0 0% 100%;
+  --secondary:          20 18% 91%;
+  --secondary-foreground: 20 15% 14%;
+  --muted:              20 18% 91%;
+  --muted-foreground:   20 8% 48%;
+  --accent:             20 18% 91%;
+  --accent-foreground:  20 15% 14%;
+  --destructive:        0 65% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --border:             20 15% 86%;
+  --input:              20 15% 86%;
+  --ring:               16 58% 65%;
+  --decoy-bg:           22 30% 95%;
+  --decoy-card:         0 0% 100%;
+  --decoy-accent:       16 58% 46%;
+  --decoy-text:         20 15% 14%;
+  --decoy-muted:        20 8% 48%;
+}
+
 /* Prevent text selection on triple-tap areas */
 .no-select {
   -webkit-user-select: none;
