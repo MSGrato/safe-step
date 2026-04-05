@@ -11,16 +11,16 @@ type Note = {
 
 const STORAGE_KEY = 'safestep_decoy_notes';
 
-// Accent bar colors — subtle left-border strips like a modern notes app
+// Accent bar colors — left-side only so the other three borders stay border-border
 const COLORS = [
-  'border-yellow-400',
-  'border-blue-400',
-  'border-green-500',
-  'border-purple-400',
-  'border-orange-400',
-  'border-pink-400',
-  'border-red-400',
-  'border-teal-500',
+  'border-l-yellow-400',
+  'border-l-blue-400',
+  'border-l-green-500',
+  'border-l-purple-400',
+  'border-l-orange-400',
+  'border-l-pink-400',
+  'border-l-red-400',
+  'border-l-teal-500',
 ];
 
 // Dot swatches shown in the color picker
@@ -36,11 +36,11 @@ const SWATCHES = [
 ];
 
 const DEFAULT_NOTES: Note[] = [
-  { id: '1', title: 'Grocery List', content: 'Milk, eggs, bread, butter, cheese, spinach, chicken, rice, olive oil', color: 'border-yellow-400', updatedAt: Date.now() - 60000 },
-  { id: '2', title: 'Meeting Notes', content: 'Discuss Q2 targets and team updates\n- Review marketing budget\n- Assign new project leads\n- Schedule follow-up for next Friday', color: 'border-blue-400', updatedAt: Date.now() - 120000 },
-  { id: '3', title: 'Book Recommendations', content: '1. Atomic Habits\n2. Deep Work\n3. The Alchemist\n4. Thinking, Fast and Slow\n5. Sapiens', color: 'border-green-500', updatedAt: Date.now() - 180000 },
-  { id: '4', title: 'Weekend Plans', content: 'Saturday: farmers market in the morning, yoga at noon\nSunday: brunch with Sarah, afternoon hike', color: 'border-purple-400', updatedAt: Date.now() - 240000 },
-  { id: '5', title: 'Recipe Ideas', content: 'Try making homemade pasta this week\nLook up Thai curry recipe\nBake banana bread with overripe bananas', color: 'border-orange-400', updatedAt: Date.now() - 300000 },
+  { id: '1', title: 'Grocery List', content: 'Milk, eggs, bread, butter, cheese, spinach, chicken, rice, olive oil', color: 'border-l-yellow-400', updatedAt: Date.now() - 60000 },
+  { id: '2', title: 'Meeting Notes', content: 'Discuss Q2 targets and team updates\n- Review marketing budget\n- Assign new project leads\n- Schedule follow-up for next Friday', color: 'border-l-blue-400', updatedAt: Date.now() - 120000 },
+  { id: '3', title: 'Book Recommendations', content: '1. Atomic Habits\n2. Deep Work\n3. The Alchemist\n4. Thinking, Fast and Slow\n5. Sapiens', color: 'border-l-green-500', updatedAt: Date.now() - 180000 },
+  { id: '4', title: 'Weekend Plans', content: 'Saturday: farmers market in the morning, yoga at noon\nSunday: brunch with Sarah, afternoon hike', color: 'border-l-purple-400', updatedAt: Date.now() - 240000 },
+  { id: '5', title: 'Recipe Ideas', content: 'Try making homemade pasta this week\nLook up Thai curry recipe\nBake banana bread with overripe bananas', color: 'border-l-orange-400', updatedAt: Date.now() - 300000 },
 ];
 
 function loadNotes(): Note[] {
@@ -49,11 +49,11 @@ function loadNotes(): Note[] {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_NOTES));
     return DEFAULT_NOTES;
   }
-  // Migrate old bg-* color values to new border-* values if needed
+  // Migrate old bg-* or border-* (non-directional) color values to border-l-* format
   const notes: Note[] = JSON.parse(data);
   const migrated = notes.map((n, i) => ({
     ...n,
-    color: n.color.startsWith('border-') ? n.color : COLORS[i % COLORS.length],
+    color: n.color.startsWith('border-l-') ? n.color : COLORS[i % COLORS.length],
   }));
   return migrated;
 }

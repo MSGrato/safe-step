@@ -181,7 +181,7 @@ export function RecipeApp({ onTripleTap }: { onTripleTap?: () => void }) {
           {selected.steps.trim() && (
             <div>
               <h2 className="text-lg font-semibold text-decoy-text mb-3">Instructions</h2>
-              <div className="bg-decoy-card rounded-2xl p-4 shadow-sm space-y-3">
+              <div className="bg-decoy-card rounded-2xl p-4 shadow-sm border border-[hsl(var(--border))] space-y-3">
                 {selected.steps.split('\n').filter(Boolean).map((line, i) => (
                   <p key={i} className="text-[15px] text-decoy-text leading-relaxed">{line}</p>
                 ))}
